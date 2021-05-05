@@ -4,7 +4,7 @@
       :height="$vuetify.breakpoint.xs ? 62 : 122"
       :max-height="$vuetify.breakpoint.xs ? 62 : 122"
     >
-      <v-container fluid class="py-0">
+      <v-container class="py-0">
         <img src="images/logo.png" />
 
         <v-spacer></v-spacer>
@@ -113,7 +113,6 @@
     opacity: 1 !important;
   }
   @media screen and (min-width: 600px) {
-
     img {
       height: 64px;
     }
