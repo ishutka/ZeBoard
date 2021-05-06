@@ -1,7 +1,7 @@
 <template>
-  <v-container class="board-holder d-flex flex-column justify-start">
+  <v-container class="column-holder d-flex flex-column justify-start">
     <v-expansion-panels>
-      <Column v-for="(board, index) in boards" :key="index" :board="board" />
+      <Column v-for="(column, index) in columns" :key="index" :column="column" />
     </v-expansion-panels>
     <v-btn
       v-if="$vuetify.breakpoint.xsOnly"
@@ -21,24 +21,24 @@
 export default {
   data() {
     return {
-      boards: []
+      columns: []
     };
   },
   mounted() {
-    let boards;
+    let columns;
     try {
-      boards = window.localStorage.getItem("boards");
+      columns = window.localStorage.getItem("columns");
     } catch (e) {
       this.showError(e);
       throw new Error(e);
     }
-    if (!boards) {
-      boards = [
+    if (!columns) {
+      columns = [
         { name: "TO DO", position: 0, tasks: [] },
         { name: "DONE", position: 1, tasks: [] }
       ];
     }
-    this.boards = boards;
+    this.columns = columns;
   },
   methods: {
     showError(e) {
@@ -52,7 +52,7 @@ export default {
 <style lang="scss">
 @import "~/assets/css/main.scss";
 
-.board-holder {
+.column-holder {
   overflow: auto;
 
   .v-btn.create-column-btn {

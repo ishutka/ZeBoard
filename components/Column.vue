@@ -1,32 +1,32 @@
 <template>
-  <v-expansion-panel
-    class="board"
-    :class="{ board__empty: !board.tasks.length }"
+  <v-expansion-panel :disabled="!column.tasks.length"
+    class="column"
+    :class="{ column__empty: !column.tasks.length }"
   >
     <v-expansion-panel-header>
-      {{ board.name }} - {{ board.tasks.length }}
+      {{ column.name }} - {{ column.tasks.length }}
     </v-expansion-panel-header>
-    <v-expansion-panel-content v-if="board.tasks.length">
-      <task v-for="task in board.tasks" :key="task.id" :task="task" />
+    <v-expansion-panel-content v-if="column.tasks.length">
+      <task v-for="task in column.tasks" :key="task.id" :task="task" />
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
 <script>
 export default {
   props: {
-    board: { type: Object, required: true }
+    column: { type: Object, required: true }
   },
 };
 </script>
 <style lang="scss">
 @import "~/assets/css/main.scss";
-.board {
+.column {
   background-color: $light-blue !important;
   &:after,
   &:before {
     content: none !important;
   }
-  &.board__empty {
+  &.column__empty {
     .v-expansion-panel-header i.v-icon {
       display: none;
     }
