@@ -1,7 +1,7 @@
 <template>
   <v-container class="column-holder d-flex flex-column justify-start">
     <v-expansion-panels>
-      <Column v-for="(column, index) in columns" :key="index" :column="column" />
+      <Column v-for="(column, index) in columns" :key="index" :column="column" :data-index="index" />
     </v-expansion-panels>
     <v-btn
       v-if="$vuetify.breakpoint.xsOnly"
@@ -27,7 +27,8 @@ export default {
   mounted() {
     let columns;
     try {
-      columns = window.localStorage.getItem("columns");
+      columns = JSON.parse(window.localStorage.getItem("columns"));
+
     } catch (e) {
       this.showError(e);
       throw new Error(e);
@@ -37,8 +38,10 @@ export default {
         { name: "TO DO", position: 0, tasks: [] },
         { name: "DONE", position: 1, tasks: [] }
       ];
+      debugger;
+      window.localStorage.setItem('columns',JSON.stringify(columns));
     }
-    this.columns = columns;
+    this.columns = columns || [];
   },
   methods: {
     showError(e) {
