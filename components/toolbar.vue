@@ -14,6 +14,7 @@
           outlined
           large
           class="mx-4 mx-md-8 px-sm-2 px-md-10 create-column-btn"
+          @click="openCreateColumnDialog"
         >
           Сreate column
         </v-btn>
@@ -24,6 +25,7 @@
           large
           class="px-sm-2 px-md-10 create-task-btn"
           elevation="0"
+          @click="openCreateTaskDialog"
         >
           Сreate task
         </v-btn>
@@ -35,6 +37,7 @@
           class="px-10"
           elevation="0"
           color="#FC1370"
+          @click="openCreateTaskDialog"
         >
           <v-icon dark>
             mdi-plus
@@ -44,8 +47,35 @@
     </v-toolbar>
   </client-only>
 </template>
+<script>
+export default {
+  methods: {
+    openCreateTaskDialog() {
+      this.$emit("openCreateTaskDialog");
+    },
+    openCreateColumnDialog() {
+      this.$emit("openCreateColumnDialog");
+    }
+  }
+};
+</script>
 <style lang="scss">
 @import "~/assets/css/main.scss";
+#app {
+  .v-btn.create-task-btn {
+    background-color: $pink;
+  }
+
+  .v-btn.create-task-btn:hover {
+    background-color: $light-pink;
+  }
+
+  .v-btn.create-task-btn:focus,
+  .v-btn.create-task-btn:active {
+    background-color: $dark-pink;
+    opacity: 1 !important;
+  }
+}
 .v-toolbar {
   .v-toolbar button {
     text-transform: none;
@@ -96,20 +126,6 @@
     background-color: $blue;
     border-color: $blue;
     color: $dark-blue;
-    opacity: 1 !important;
-  }
-
-  .v-btn.create-task-btn {
-    background-color: $pink;
-  }
-
-  .v-btn.create-task-btn:hover {
-    background-color: $light-pink;
-  }
-
-  .v-btn.create-task-btn:focus,
-  .v-btn.create-task-btn:active {
-    background-color: $dark-pink;
     opacity: 1 !important;
   }
   @media screen and (min-width: 600px) {
