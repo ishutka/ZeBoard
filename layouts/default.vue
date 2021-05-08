@@ -7,26 +7,10 @@
       />
       <Nuxt />
     </v-main>
-    <v-dialog v-model="createTaskDialog" max-width="290">
-      <v-card>
-        <v-card-title class="headline">
-          Use Google's location service?
-        </v-card-title>
-        <v-card-text
-          >Let Google help apps determine location. This means sending anonymous
-          location data to Google, even when no apps are running.</v-card-text
-        >
+    <v-dialog v-model="createTaskDialog" max-width="900" width="90%">
+      <v-card class="pa-4 pa-lg-10">
+        <createTaskForm v-if="createTaskDialog" />
         <v-card-actions class="flex-wrap">
-          <!-- <v-btn
-            dark
-            large
-            block
-            class="create-task-btn"
-            elevation="0"
-            @click="createTask"
-          >
-            Сreate task
-          </v-btn> -->
           <v-btn
             color="blue darken-1"
             text
@@ -50,11 +34,13 @@ export default {
       createColumnDialog: false
     };
   },
-  methods: {
-  }
+  methods: {}
 };
 </script>
 <style lang="scss">
+#app {
+  font-family: "Montserrat", sans-serif;
+}
 #app button {
   text-transform: none;
 }
