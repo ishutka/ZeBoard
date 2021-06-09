@@ -77,7 +77,8 @@
           name="estimation"
           placeholder="Placeholder"
           outlined
-          v-model="estimation"
+          v-model.trim="estimation"
+          :rules="[v => estimationRules(v)]"
         ></v-text-field>
       </v-col>
       <v-col cols="12" lg="6">
@@ -153,7 +154,36 @@ export default {
     };
   },
   methods: {
-    // TODO: EstimationValidation rules
+    estimationRules(val) {
+      if (!val.trim()) return true;
+      const arr = val.trim().split(" ");
+      let isValidEstimation = true;
+      const arrLength = arr.length;
+      arr.forEach((el, index) => {
+        const num = +el.slice(0, -1);
+        const alias = el.slice(-1);
+        if (
+          arrLength === 3 &&
+          index === 0 &&
+          (alias !== "d" || num !== parseInt(num, 10) || num < 1)
+        )
+          isValidEstimation = false;
+        if (
+          ((arrLength === 3 && index === 1) ||
+            (arrLength === 2 && index === 0)) &&
+          (alias !== "h" || num !== parseInt(num, 10) || num > 23 || num < 0)
+        )
+          isValidEstimation = false;
+        if (
+          ((arrLength === 3 && index === 2) ||
+            (arrLength === 2 && index === 1) ||
+            (arrLength === 1 && index === 0)) &&
+          (alias !== "m" || num !== parseInt(num, 10) || num > 59 || num < 0)
+        )
+          isValidEstimation = false;
+      });
+      return isValidEstimation;
+    },
     createTask() {
       const form = this.$refs.taskForm;
       const isValid = form.validate();
