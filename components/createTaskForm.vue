@@ -188,7 +188,7 @@ export default {
     createTask() {
       const form = this.$refs.taskForm;
       const isValid = form.validate();
-      console.log("isValid: ", isValid);// and (this.name.length && this.selectedAutor.name) to check in jset testing
+      console.log("isValid: ", isValid); // and (this.name.length && this.selectedAutor.name) to check in jset testing
       // TODO: remove this bondage above - to adjust in jest tests
       if (isValid || (this.name.length && this.selectedAutor.name)) {
         const task = { name: this.name, autor: this.selectedAutor };
@@ -201,10 +201,13 @@ export default {
             task.until = `${this.date}T${this.endOfWorkingDay}:00:00`;
           }
         }
+        task.project=this.setTaskProgect();
       }
     },
     setTaskNumber() {},
-    setTaskProgect() {},
+    setTaskProgect() {
+      return String.fromCharCode(Math.floor(Math.random() * (91 - 65)) + 65);
+    },
     setDateByEstimation() {
       const now = new Date();
       const estimation = {};
@@ -217,7 +220,7 @@ export default {
         (estimation.d || 0) * 24 * 3600 * 1000 +
         (estimation.h || 0) * 3600 * 1000 +
         estimation.m * 60 * 1000;
-        
+
       const until = new Date(now.getTime() + ms);
       this.date = until.toISOString().substr(0, 10);
       const untilHours =
