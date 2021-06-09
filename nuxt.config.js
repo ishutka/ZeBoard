@@ -39,7 +39,7 @@ export default {
           appId: "1:163622437343:web:c83a237984d88321fec46a",
           measurementId: "G-FXMYG6W6EW"
         },
-        onFirebaseHosting:true,
+        onFirebaseHosting:true, //test
         services: {
           analytics: true,
         }
