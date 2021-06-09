@@ -134,6 +134,7 @@
 export default {
   data() {
     return {
+      // TODO: move autors to store or main app component??
       autors: [
         { name: "Ben", avatar: "images/avatar_Ben.png" },
         { name: "Amanda", avatar: "images/avatar_Amanda.png" },
@@ -187,7 +188,8 @@ export default {
     createTask() {
       const form = this.$refs.taskForm;
       const isValid = form.validate();
-
+      console.log("isValid: ", isValid);// and (this.name.length && this.selectedAutor.name) to check in jset testing
+      // TODO: remove this bondage above - to adjust in jest tests
       if (isValid || (this.name.length && this.selectedAutor.name)) {
         const task = { name: this.name, autor: this.selectedAutor };
         if (this.description.length) task.description = this.description;
@@ -212,9 +214,10 @@ export default {
         estimation[alias] = +el.slice(0, -1);
       });
       const ms =
-        estimation.d * 24 * 3600 * 1000 +
-        estimation.h * 3600 * 1000 +
+        (estimation.d || 0) * 24 * 3600 * 1000 +
+        (estimation.h || 0) * 3600 * 1000 +
         estimation.m * 60 * 1000;
+        
       const until = new Date(now.getTime() + ms);
       this.date = until.toISOString().substr(0, 10);
       const untilHours =
