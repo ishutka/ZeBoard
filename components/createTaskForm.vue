@@ -1,36 +1,40 @@
 <template>
-  <v-form ref="form" v-model="valid" lazy-validation >
+  <v-form ref="taskForm" v-model="valid" lazy-validation>
     <v-row class="create-task-form">
       <v-col cols="12">
-        <v-card-title class="headline">
-          Сreate task
-        </v-card-title>
+        <v-card-title class="headline"> Сreate task </v-card-title>
       </v-col>
       <v-col cols="12">
         <v-text-field
           label="Name"
           placeholder="Placeholder"
+          name="name"
           outlined
+          required
+          v-model="name"
+          :rules="nameRules"
         ></v-text-field>
       </v-col>
-      <v-col cols="12">
+      <!-- <v-col cols="12">
         <v-text-field
           label="Description"
           placeholder="Placeholder"
           outlined
         ></v-text-field>
-      </v-col>
+      </v-col> -->
       <v-col cols="12">
-        <v-textarea name="input-7-4"
+        <v-textarea
+          name="description"
           label="Description"
           placeholder="Placeholder"
           outlined
+          v-model="description"
         ></v-textarea>
       </v-col>
 
       <v-col cols="12" lg="6">
         <v-menu
-          v-model="datePicker"
+          v-model="datePickerIsShowed"
           :close-on-content-click="false"
           :nudge-right="40"
           transition="scale-transition"
@@ -41,46 +45,75 @@
             <v-text-field
               v-model="date"
               label="Until"
+              name="until"
               placeholder="Placeholder"
               append-icon="mdi-calendar"
               readonly
               outlined
+              required
+              :rules="[
+                v => {
+                  return (
+                    !v.length ||
+                    new Date(v) >= new Date().getTime() ||
+                    v == new Date().toISOString().substr(0, 10) ||
+                    'It can`t be earlier than today'
+                  );
+                }
+              ]"
               v-bind="attrs"
               v-on="on"
             ></v-text-field>
           </template>
           <v-date-picker
             v-model="date"
-            @input="datePicker = false"
+            @input="datePickerIsShowed = false"
           ></v-date-picker>
         </v-menu>
       </v-col>
       <v-col cols="12" lg="6">
         <v-text-field
           label="Estimation time"
+          name="estimation"
           placeholder="Placeholder"
           outlined
+          v-model="estimation"
         ></v-text-field>
       </v-col>
       <v-col cols="12" lg="6">
         <v-select
+          class="select-autor"
+          name="autor"
           v-model="selectedAutor"
           :items="autors"
-          :rules="[v => !!v || 'Item is required']"
+          attach=".select-autor"
+          :rules="[v => !!v.name || 'Item is required']"
           label="Autor"
           placeholder="Automatically"
           required
           outlined
-          prepend-inner-icon="mdi-account-outline"
-        ></v-select>
+          positionY="210"
+          :menu-props="{
+            contentClass: 'select-autor-menu',
+            offsetY: true
+          }"
+          return-object
+          :prepend-inner-icon="selectedAutor.name ? '' : 'mdi-account-outline'"
+        >
+          <template v-slot:item="{ item }">
+            <div class="d-flex align-center">
+              <img class="avatar" :src="item.avatar" :alt="item.name" />
+              {{ item.name }}
+            </div>
+          </template>
+          <template v-slot:selection="{ item }">
+            <div class="d-flex align-center">
+              <img class="avatar mb-0" :src="item.avatar" :alt="item.name" />
+              {{ item.name }}
+            </div>
+          </template>
+        </v-select>
       </v-col>
-      <!-- <v-btn color="error" class="mr-4" @click="reset">
-        Reset Form
-      </v-btn> -->
-
-      <!-- <v-btn color="warning" @click="resetValidation">
-        Reset Validation
-      </v-btn> -->
       <v-col cols="12">
         <v-btn
           dark
@@ -100,62 +133,162 @@
 export default {
   data() {
     return {
-      autors: [],
-      selectedAutor: null,
-      datePicker: false,
-      date: new Date().toISOString().substr(0, 10),
+      autors: [
+        { name: "Ben", avatar: "images/avatar_Ben.png" },
+        { name: "Amanda", avatar: "images/avatar_Amanda.png" },
+        { name: "David", avatar: "images/avatar_David.png" },
+        { name: "Anna", avatar: "images/avatar_Anna.png" },
+        { name: "John", avatar: "images/avatar_John.png" }
+      ],
+      selectedAutor: {},
+      datePickerIsShowed: false,
+      date: "",
       valid: false,
       name: "",
       description: "",
       until: "",
       estimation: "",
-      autor: "",
-      nameRules: [
-        v => !!v || "Name is required",
-        v => v.length <= 10 || "Name must be less than 10 characters"
-      ]
+      nameRules: [v => !!v || "Name is required"],
+      endOfWorkingDay: 18
     };
   },
   methods: {
-    validate() {},
-    resetValidate() {},
-    createTask() {},
-    reset() {}
+    // TODO: EstimationValidation rules
+    createTask() {
+      const form = this.$refs.taskForm;
+      const isValid = form.validate();
+
+      if (isValid || (this.name.length && this.selectedAutor.name)) {
+        const task = { name: this.name, autor: this.selectedAutor };
+        if (this.description.length) task.description = this.description;
+
+        if (this.date || this.estimation) {
+          if (this.estimation) task.until = this.setDateByEstimation();
+          else {
+            this.setEstimationByDate();
+            task.until = `${this.date}T${this.endOfWorkingDay}:00:00`;
+          }
+        }
+      }
+    },
+    setTaskNumber() {},
+    setTaskProgect() {},
+    setDateByEstimation() {
+      const now = new Date();
+      const estimation = {};
+      const arr = this.estimation.split(" ");
+      arr.forEach(el => {
+        const alias = el.slice(-1);
+        estimation[alias] = +el.slice(0, -1);
+      });
+      const ms =
+        estimation.d * 24 * 3600 * 1000 +
+        estimation.h * 3600 * 1000 +
+        estimation.m * 60 * 1000;
+      const until = new Date(now.getTime() + ms);
+      this.date = until.toISOString().substr(0, 10);
+      const untilHours =
+        until.getHours() < 10 ? `0${until.getHours()}` : until.getHours();
+      const untilMinutes =
+        until.getMinutes() < 10 ? `0${until.getMinutes()}` : until.getMinutes();
+      const x = until.getHours();
+      return `${this.date}T${untilHours}:${untilMinutes}:00`;
+    },
+    setEstimationByDate() {
+      if (!this.estimation) {
+        const limitDate = new Date(
+          `${this.date}T${this.endOfWorkingDay}:00:00`
+        );
+        const nowTime = new Date();
+        const hours = parseInt((limitDate - nowTime) / (3600 * 1000));
+        const days = parseInt(hours / 24);
+
+        const hoursToTheEndOfToday =
+          this.endOfWorkingDay - 1 - nowTime.getHours();
+        const minutesToTheEndOfTheHour = 59 - nowTime.getMinutes();
+        if (days)
+          this.estimation += `${days}d ${hoursToTheEndOfToday}h ${minutesToTheEndOfTheHour}m`;
+        else {
+          if (hours > 0) this.estimation += `${hours}h `;
+          this.estimation += `${minutesToTheEndOfTheHour}m`;
+        }
+      }
+    },
+    reset() {
+      this.$refs.taskform.reset();
+    }
   }
 };
 </script>
 <style lang="scss">
 .create-task-form {
-    .v-text-field.v-input .v-label {
-        font-size: 10px;
-        top: -20px !important;
-        left: -13px !important;
-        &.v-label--active {
-            transform: translateY(-5px) scale(1);
-        }
+  img.avatar {
+    width: 16px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    display: block;
+    overflow: hidden;
+    border-radius: 20px;
+  }
+  input {
+    max-height: 36px;
+    height: 36px;
+  }
+  @media screen and (min-width: 600px) {
+    img.avatar {
+      width: 20px;
     }
-    .v-input.v-input--is-label-active {
-        legend {
-            display: none;
-        }
+  }
+  .select-autor-menu {
+    font-size: 12px;
+    border: 1px blue solid;
+    border-radius: 0 0 4px 4px;
+    margin-top: -6px;
+    .v-list {
+      padding: 0;
     }
-    .v-text-field.v-input.v-select .v-input__prepend-inner {
-        position: absolute;
+    .v-list-item:not(:first-child) {
+      border-top: 1px blue solid;
     }
-    .v-input__prepend-inner,
-    .v-input__append-inner {
-        margin-top: 0;
-        align-self: center;
+    .v-list-item {
+      min-height: 32px;
     }
-    .v-text-field--outlined > .v-input__control .v-select__selections {
-        padding: 2px 0;
+    @media screen and (min-width: 600px) {
+      font-size: 14px;
     }
-    .v-text-field--outlined > .v-input__control .v-select__slot,
-    .v-text-field--outlined > .v-input__control > .v-input__slot {
-        min-height: 28px;
+  }
+  .v-text-field.v-input .v-label {
+    font-size: 10px;
+    top: -20px !important;
+    left: -13px !important;
+    &.v-label--active {
+      transform: translateY(-5px) scale(1);
     }
-    .v-text-field--outlined fieldset {
-        top: 0;
+  }
+  .v-input.v-input--is-label-active {
+    legend {
+      display: none;
     }
+  }
+  .v-text-field.v-input.v-select .v-input__prepend-inner {
+    position: absolute;
+  }
+  .v-input__prepend-inner,
+  .v-input__append-inner {
+    margin-top: 0;
+    align-self: center;
+  }
+  .v-text-field--outlined > .v-input__control .v-select__selections {
+    padding: 2px 0;
+  }
+  .v-text-field--outlined > .v-input__control .v-select__slot,
+  .v-text-field--outlined > .v-input__control > .v-input__slot {
+    min-height: 28px;
+  }
+  .v-text-field--outlined fieldset {
+    top: 0;
+    height: 36px;
+    border-width: 1px;
+  }
 }
 </style>
