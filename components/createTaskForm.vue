@@ -260,6 +260,7 @@ export default {
 .create-task-form {
   img.avatar {
     width: 16px;
+    height: 16px;
     margin-right: 10px;
     margin-bottom: 5px;
     display: block;
@@ -267,12 +268,13 @@ export default {
     border-radius: 20px;
   }
   input {
-    max-height: 36px;
-    height: 36px;
+    max-height: 34px;
+    height: 34px;
   }
   @media screen and (min-width: 600px) {
     img.avatar {
       width: 20px;
+      height: 20px;
     }
   }
   .select-autor-menu {
@@ -320,11 +322,15 @@ export default {
   .v-text-field--outlined > .v-input__control .v-select__slot,
   .v-text-field--outlined > .v-input__control > .v-input__slot {
     min-height: 28px;
+    height: 34px;
   }
   .v-text-field--outlined fieldset {
     top: 0;
     height: 36px;
-    border-width: 1px;
+    .v-input__append-inner {
+      margin-top: 0;
+      align-self: center;
+    }
   }
 }
 </style>
