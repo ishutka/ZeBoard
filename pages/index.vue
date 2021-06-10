@@ -1,73 +1,99 @@
 <template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">
-        ZeBoard
-      </h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
-  </div>
+  <v-container class="column-holder d-flex flex-column justify-start">
+    <v-expansion-panels>
+      <Column v-for="(column, index) in columns" :key="index" :column="column" :data-index="index" />
+    </v-expansion-panels>
+    <v-btn
+      v-if="$vuetify.breakpoint.xsOnly"
+      text
+      large
+      class="mx-4 mx-md-8 px-sm-2 px-md-10 create-column-btn"
+    >
+      Сreate column
+      <v-icon dark>
+        mdi-plus
+      </v-icon>
+    </v-btn>
+  </v-container>
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      columns: []
+    };
+  },
+  mounted() {
+    let columns;
+    try {
+      columns = JSON.parse(window.localStorage.getItem("columns"));
+
+    } catch (e) {
+      this.showError(e);
+      throw new Error(e);
+    }
+    if (!columns) {
+      columns = [
+        { name: "TO DO", position: 0, tasks: [] },
+        { name: "DONE", position: 1, tasks: [] }
+      ];
+      debugger;
+      window.localStorage.setItem('columns',JSON.stringify(columns));
+    }
+    this.columns = columns || [];
+  },
+  methods: {
+    showError(e) {
+      console.log("there is an error: ", e);
+      // show eror for user
+    }
+  }
+};
 </script>
 
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
+<style lang="scss">
+@import "~/assets/css/main.scss";
 
-.title {
-  font-family:
-    'Quicksand',
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
+.column-holder {
+  overflow: auto;
 
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
+  .v-btn.create-column-btn {
+    color: $dark-blue;
+  }
 
-.links {
-  padding-top: 15px;
+  .v-btn.create-column-btn:hover {
+    opacity: 0.5;
+  }
+
+  .v-btn.create-column-btn:focus,
+  .v-btn.create-column-btn:active {
+    background-color: $blue;
+    border-color: $blue;
+    color: $dark-blue;
+    opacity: 1 !important;
+  }
+
+  @media screen and (min-width: 960px) {
+    > div::-webkit-scrollbar-track {
+      background: #fff;
+    }
+
+    > div::-webkit-scrollbar-thumb {
+      background: #414141;
+      border-radius: 10px;
+      display: table-row-group;
+      width: 0px;
+    }
+
+    > div::-webkit-scrollbar {
+      width: 8px;
+      border-radius: 5px;
+      background: #fff;
+    }
+    > div {
+      max-height: calc(100vh - 200px);
+    }
+  }
 }
 </style>

@@ -54,3 +54,6 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 Макет:
 https://www.figma.com/file/YolnpTWLJWAAiypV3cCcqP/Test_2?node-id=0%3A1
+ 
+And the copy:
+https://www.figma.com/file/hRBn9xgVniQIV9drti3KAj/Test_2-(Copy)
