@@ -62,6 +62,9 @@ export default {
   build: {
     //TODO: style's order adjustment
     transpile: ['vuetify'],
+    extractCSS: {
+      ignoreOrder: true
+    }
   },
 
   target:'static'
