@@ -319,18 +319,17 @@ export default {
   .v-text-field--outlined > .v-input__control .v-select__selections {
     padding: 2px 0;
   }
+  .v-text-field--outlined > .v-input__control > .v-input__slot {
+    border: 1px solid #999;
+   border-radius: 4px;
+  }
   .v-text-field--outlined > .v-input__control .v-select__slot,
   .v-text-field--outlined > .v-input__control > .v-input__slot {
     min-height: 28px;
     height: 34px;
   }
-  .v-text-field--outlined fieldset {
-    top: 0;
-    height: 36px;
-    .v-input__append-inner {
-      margin-top: 0;
-      align-self: center;
-    }
+  fieldset {
+    display: none !important;
   }
 }
 </style>
