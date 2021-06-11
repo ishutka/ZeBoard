@@ -201,7 +201,7 @@ export default {
             task.until = `${this.date}T${this.endOfWorkingDay}:00:00`;
           }
         }
-        task.project=this.setTaskProgect();
+        task.project = this.setTaskProgect();
       }
     },
     setTaskNumber() {},
@@ -306,25 +306,27 @@ export default {
   .v-text-field.v-input.v-select .v-input__prepend-inner {
     position: absolute;
   }
-  .v-input__prepend-inner,
-  .v-input__append-inner {
-    margin-top: 0 !important;
-    align-self: center  !important;
+  .v-input__slot {
+    .v-input__prepend-inner,
+    .v-input__append-inner {
+      margin-top: 0;
+      align-self: center;
+    }
+    fieldset {
+      display: none;
+    }
   }
   .v-text-field--outlined > .v-input__control .v-select__selections {
     padding: 2px 0;
   }
   .v-text-field--outlined > .v-input__control > .v-input__slot {
     border: 1px solid #999;
-   border-radius: 4px;
+    border-radius: 4px;
   }
   .v-text-field--outlined > .v-input__control .v-select__slot,
   .v-text-field--outlined > .v-input__control > .v-input__slot {
     min-height: 28px;
     height: 34px;
-  }
-  fieldset {
-    display: none !important;
   }
 }
 </style>
