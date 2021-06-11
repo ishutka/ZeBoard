@@ -156,6 +156,9 @@ export default {
       endOfWorkingDay: 18
     };
   },
+  props: {
+    taskNumber: { type: Number, required: true }
+  },
   methods: {
     estimationRules(val) {
       if (!val.trim()) return true;

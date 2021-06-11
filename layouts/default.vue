@@ -5,11 +5,11 @@
         @openCreateTaskDialog="createTaskDialog = true"
         @openCreateColumnDialog="createColumnDialog = true"
       />
-      <Nuxt />
+      <Nuxt ref="nuxt"/>
     </v-main>
     <v-dialog v-model="createTaskDialog" max-width="900" width="90%">
       <v-card class="pa-4 pa-lg-10">
-        <createTaskForm v-if="createTaskDialog" />
+        <createTaskForm v-if="createTaskDialog" :taskNumber="tasksQuantity+1" />
         <v-card-actions class="flex-wrap">
           <v-btn
             color="blue darken-1"
@@ -31,8 +31,12 @@ export default {
   data() {
     return {
       createTaskDialog: false,
-      createColumnDialog: false
+      createColumnDialog: false,
+      tasksQuantity:0
     };
+  },
+  mounted(){
+    this.tasksQuantity=this.$refs.nuxt.$children[0].tasksQuantity;
   },
   methods: {}
 };
