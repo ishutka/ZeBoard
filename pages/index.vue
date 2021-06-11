@@ -27,7 +27,7 @@ export default {
   data() {
     return {
       columns: [],
-      tasksQuantity:0
+      toDoColumn: {}
     };
   },
   mounted() {
@@ -63,7 +63,7 @@ export default {
       columns.forEach(c => {
         try {
           const column = JSON.parse(window.localStorage.getItem(`column-${c}`));
-          if (c=="TO DO") this.tasksQuantity=column.tasksQuantity;
+          if (c == "TO DO") this.toDoColumn = column;
 
           this.columns.push(column);
         } catch (e) {

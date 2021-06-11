@@ -157,7 +157,7 @@ export default {
     };
   },
   props: {
-    taskNumber: { type: Number, required: true }
+    toDoColumn: { type: Object, required: true }
   },
   methods: {
     estimationRules(val) {
@@ -211,9 +211,19 @@ export default {
           }
         }
         task.project = this.setTaskProgect();
+        task.number = this.toDoColumn.tasksQuantity + 1;
+        this.addTaskToLocalstorage(task);
       }
     },
-    setTaskNumber() {},
+    addTaskToLocalstorage(task) {
+      const newColumn = {
+        name: this.toDoColumn.name,
+        position: this.toDoColumn.position,
+        tasks: [task, ...this.toDoColumn.tasks],
+        tasksQuantity: task.number
+      };
+      window.localStorage.setItem("column-TO DO", JSON.stringify(newColumn));
+    },
     setTaskProgect() {
       return String.fromCharCode(Math.floor(Math.random() * (91 - 65)) + 65);
     },
