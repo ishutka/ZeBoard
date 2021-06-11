@@ -303,18 +303,13 @@ export default {
       transform: translateY(-5px) scale(1);
     }
   }
-  .v-input.v-input--is-label-active {
-    legend {
-      display: none;
-    }
-  }
   .v-text-field.v-input.v-select .v-input__prepend-inner {
     position: absolute;
   }
   .v-input__prepend-inner,
   .v-input__append-inner {
-    margin-top: 0;
-    align-self: center;
+    margin-top: 0 !important;
+    align-self: center  !important;
   }
   .v-text-field--outlined > .v-input__control .v-select__selections {
     padding: 2px 0;
