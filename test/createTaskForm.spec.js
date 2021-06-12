@@ -1,5 +1,5 @@
 import Vuetify from 'vuetify';
-import { mount} from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import TaskForm from "@/components/createTaskForm";
 
 
@@ -12,7 +12,15 @@ describe("createTaskForm.test.js", () => {
   it("Estimation = 1 day=> Date must be tomorrow", () => {
     wrapper = mount(TaskForm, {
       vuetify,//for vuetify compilation
-    }); 
+      propsData: {
+        toDoColumn: {
+          name: "TO DO",
+          position: 0,
+          tasks: [],
+          tasksQuantity: 0
+        }
+      },
+    });
     wrapper.setData({
       selectedAutor: {
         name: "Ben",
@@ -26,7 +34,7 @@ describe("createTaskForm.test.js", () => {
     wrapper.vm.createTask();
 
     const today = new Date();
-    const tomorrow=new Date(today.getTime() + 24*3600*1000).toISOString().substr(0, 10);
+    const tomorrow = new Date(today.getTime() + 24 * 3600 * 1000).toISOString().substr(0, 10);
     expect(wrapper.vm.date).toEqual(tomorrow);
   });
 });
