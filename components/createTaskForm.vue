@@ -55,9 +55,11 @@
                 v => {
                   return (
                     !v.length ||
-                    new Date(v) >= new Date().getTime() ||
-                    v == new Date().toISOString().substr(0, 10) ||
-                    'It can`t be earlier than today'
+                    new Date(`${v}T18:00:00`).getTime() >
+                      new Date().getTime() ||
+                    (new Date(`${v}T18:00:00`).getTime() <= new Date().getTime()
+                      ? 'It can`t be earlier than tomorrow'
+                      : 'It can`t be earlier than today')
                   );
                 }
               ]"
@@ -78,7 +80,7 @@
           placeholder="Placeholder"
           outlined
           v-model.trim="estimation"
-          :rules="[v => estimationRules(v)]"
+          :rules="[v => estimationRules(v) || 'Time is over']"
         ></v-text-field>
       </v-col>
       <v-col cols="12" lg="6">
@@ -154,6 +156,9 @@ export default {
       endOfWorkingDay: 18
     };
   },
+  props: {
+    toDoColumn: { type: Object, required: true }
+  },
   methods: {
     estimationRules(val) {
       if (!val.trim()) return true;
@@ -183,6 +188,10 @@ export default {
         )
           isValidEstimation = false;
       });
+      if (val == "0m") {
+        isValidEstimation = false;
+        this.date = new Date().toISOString().substr(0, 10);
+      }
       return isValidEstimation;
     },
     createTask() {
@@ -202,9 +211,19 @@ export default {
           }
         }
         task.project = this.setTaskProgect();
+        task.number = this.toDoColumn.tasksQuantity + 1;
+        this.addTaskToLocalstorage(task);
       }
     },
-    setTaskNumber() {},
+    addTaskToLocalstorage(task) {
+      const newColumn = {
+        name: this.toDoColumn.name,
+        position: this.toDoColumn.position,
+        tasks: [task, ...this.toDoColumn.tasks],
+        tasksQuantity: task.number
+      };
+      window.localStorage.setItem("column-TO DO", JSON.stringify(newColumn));
+    },
     setTaskProgect() {
       return String.fromCharCode(Math.floor(Math.random() * (91 - 65)) + 65);
     },
@@ -245,8 +264,11 @@ export default {
         if (days)
           this.estimation += `${days}d ${hoursToTheEndOfToday}h ${minutesToTheEndOfTheHour}m`;
         else {
-          if (hours > 0) this.estimation += `${hours}h `;
-          this.estimation += `${minutesToTheEndOfTheHour}m`;
+          if (hours == 0 && hoursToTheEndOfToday < 0) this.estimation = "0m";
+          else {
+            if (hours > 0) this.estimation += `${hours}h `;
+            this.estimation += `${minutesToTheEndOfTheHour}m`;
+          }
         }
       }
     },
