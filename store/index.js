@@ -30,9 +30,9 @@ export const actions = {
   fetchDataFromLocalstorage({ state, commit }) {
     let columns;
     try {
-      columns = window.localStorage.getItem("columns");
+      columns = window.localStorage.getItem("ZeBoard-columns");
     } catch (e) {
-      window.localStorage.removeItem("columns");
+      window.localStorage.removeItem("ZeBoard-columns");
       throw new Error(e);
     }
     if (!columns || !columns.length) {
@@ -44,20 +44,20 @@ export const actions = {
         tasksQuantity: 0
       };
       const colDone = { name: "DONE", position: 1, tasks: [] };
-        window.localStorage.setItem("column-TO DO", JSON.stringify(colToDo));
-        window.localStorage.setItem("column-DONE", JSON.stringify(colDone));
-      window.localStorage.setItem("columns", columns);
+        window.localStorage.setItem("ZeBoard-column-TO DO", JSON.stringify(colToDo));
+        window.localStorage.setItem("ZeBoard-column-DONE", JSON.stringify(colDone));
+      window.localStorage.setItem("ZeBoard-columns", columns);
     }
     columns = columns.split(";") || [];
     columns.forEach(c => {
       try {
-        const column = JSON.parse(window.localStorage.getItem(`column-${c}`));
+        const column = JSON.parse(window.localStorage.getItem(`ZeBoard-column-${c}`));
         if (c == "TO DO") commit("setToDoColumn", column);
         // debugger;
         commit("addNewColumn", column);
         // state.columns.push(column);
       } catch (e) {
-        window.localStorage.removeItem("columns");
+        window.localStorage.removeItem("ZeBoard-columns");
         throw new Error(e);
       }
     });
