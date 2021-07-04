@@ -1,3 +1,4 @@
+const functions = require('firebase-functions');
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -48,7 +49,7 @@ export default {
           storageBucket: "ishutka-zeboard.appspot.com",
           messagingSenderId: "1201843794",
           appId: "1:1201843794:web:a9042ab1e86b8eeb7b398b",
-          measurementId: "G-MZW61WP0F9"
+          measurementId: functions.config().analitik.key
         },
         onFirebaseHosting:true,
         services: {
