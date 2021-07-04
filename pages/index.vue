@@ -23,55 +23,26 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
-      columns: [],
-      toDoColumn: {}
+      // columns: [],
+      // toDoColumn: {}
     };
   },
   mounted() {
     this.fetchDataFromLocalstorage();
+  },
+  computed:{
+    ...mapState(['columns','toDoColumn'])
   },
   methods: {
     showError(e) {
       console.log("there is an error: ", e);
       // show eror for user
     },
-    fetchDataFromLocalstorage() {
-      let columns;
-      try {
-        columns = window.localStorage.getItem("columns");
-      } catch (e) {
-        this.showError(e);
-        throw new Error(e);
-      }
-      if (!columns || !columns.length) {
-        columns = "TO DO;DONE";
-        const colToDo = {
-          name: "TO DO",
-          position: 0,
-          tasks: [],
-          tasksQuantity: 0
-        };
-        const colDone = { name: "DONE", position: 1, tasks: [] };
-        window.localStorage.setItem("column-TO DO", JSON.stringify(colToDo));
-        window.localStorage.setItem("column-DONE", JSON.stringify(colDone));
-        window.localStorage.setItem("columns", columns);
-      }
-      columns = columns.split(";") || [];
-      columns.forEach(c => {
-        try {
-          const column = JSON.parse(window.localStorage.getItem(`column-${c}`));
-          if (c == "TO DO") this.toDoColumn = column;
-
-          this.columns.push(column);
-        } catch (e) {
-          this.showError(e);
-          throw new Error(e);
-        }
-      });
-    }
+    ...mapActions(["fetchDataFromLocalstorage"]),
   }
 };
 </script>

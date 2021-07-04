@@ -5,11 +5,14 @@
         @openCreateTaskDialog="createTaskDialog = true"
         @openCreateColumnDialog="createColumnDialog = true"
       />
-      <Nuxt ref="nuxt"/>
+      <Nuxt ref="nuxt" />
     </v-main>
     <v-dialog v-model="createTaskDialog" max-width="900" width="90%">
       <v-card class="pa-4 pa-lg-10">
-        <createTaskForm v-if="createTaskDialog" :toDoColumn="toDoColumn" />
+        <createTaskForm
+          v-if="createTaskDialog"
+          :toDoColumn="toDoColumn"
+        />
         <v-card-actions class="flex-wrap">
           <v-btn
             color="blue darken-1"
@@ -27,18 +30,22 @@
 </template>
 
 <script>
+import {mapState} from 'vuex';
 export default {
   data() {
     return {
       createTaskDialog: false,
       createColumnDialog: false,
-      toDoColumn:{}
+      // toDoColumn: {}
     };
   },
-  mounted(){
-    this.toDoColumn=this.$refs.nuxt.$children[0].toDoColumn;
+  mounted() {
   },
-  methods: {}
+  computed:{
+    ...mapState(['toDoColumn']),
+  },
+  // methods: {
+  // }
 };
 </script>
 <style lang="scss">

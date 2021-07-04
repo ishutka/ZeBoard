@@ -222,7 +222,7 @@ export default {
         tasks: [task, ...this.toDoColumn.tasks],
         tasksQuantity: task.number
       };
-      window.localStorage.setItem("column-TO DO", JSON.stringify(newColumn));
+      window.localStorage.setItem("ZeBoard-column-TO DO", JSON.stringify(newColumn));
     },
     setTaskProgect() {
       return String.fromCharCode(Math.floor(Math.random() * (91 - 65)) + 65);
