@@ -15,9 +15,7 @@
             class="mx-4 mx-md-8 px-sm-2 px-md-10 create-column-btn"
         >
             Сreate column
-            <v-icon dark>
-                mdi-plus
-            </v-icon>
+            <v-icon dark> mdi-plus </v-icon>
         </v-btn>
     </v-container>
 </template>
@@ -35,10 +33,11 @@ export default {
     },
     mounted() {
         this.fetchDataFromLocalstorage();
-        import(/*webpackChunkName: "YM"*/ "vue-yandex-metrika").then((module)=>{
-         Vue.use(module.default, {
-              id: 84009433
-          });
+        import(/*webpackChunkName: "YM"*/ "vue-yandex-metrika").then(module => {
+            Vue.use(module.default, {
+                id: 84009433,
+                env: "production"
+            });
         });
     },
     computed: {
